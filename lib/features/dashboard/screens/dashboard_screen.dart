@@ -11,6 +11,7 @@ import '../../transactions/providers/transaction_provider.dart';
 import '../../transactions/widgets/add_transaction_modal.dart';
 import '../../transactions/widgets/transaction_card.dart';
 import '../../wishlist/screens/wishlist_screen.dart';
+import '../../analytics/screens/analytics_screen.dart'; // Tambahkan import ini di atas
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -33,9 +34,18 @@ class DashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SmartBudget',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('SmartBudget', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
+          // Tambahkan tombol Analytics (Pie Chart) di sini
+          IconButton(
+            icon: const Icon(Icons.pie_chart_outline),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.stars_rounded),
             onPressed: () {

@@ -137,7 +137,7 @@ class _AddTransactionModalState extends State<AddTransactionModal> {
               
               CustomTextField(
                 controller: _titleController,
-                label: 'Nama Transaksi (Misal: Makan Siang)',
+                label: 'Nama Transaksi',
                 prefixIcon: Icons.description_outlined,
                 validator: (value) => value!.isEmpty ? 'Wajib diisi' : null,
               ),
