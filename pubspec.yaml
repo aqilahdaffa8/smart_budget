@@ -1,0 +1,36 @@
+name: smart_budget
+description: "A Production-ready Financial Tracker & Saving Goals App."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  provider: ^6.1.2
+  
+  # Firebase Services (Siap untuk Tahap 2)
+  firebase_core: ^2.25.4
+  firebase_auth: ^4.17.4
+  cloud_firestore: ^4.15.4
+  
+  # UI & Styling
+  google_fonts: ^6.2.1
+  fl_chart: ^0.67.0
+  font_awesome_flutter: ^10.7.0
+  
+  # Utilities
+  intl: ^0.19.0
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
