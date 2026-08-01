@@ -9,6 +9,7 @@ import 'shared/providers/theme_provider.dart';
 import 'core/utils/date_formatter.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/transactions/providers/transaction_provider.dart';
+import 'features/wishlist/providers/wishlist_provider.dart'; // Import ini
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         // Daftarkan Provider Transaksi di sini
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
+        ChangeNotifierProvider(create: (_) => WishlistProvider()),
       ],
       child: const SmartBudgetApp(),
     ),

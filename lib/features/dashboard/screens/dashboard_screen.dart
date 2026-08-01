@@ -10,6 +10,7 @@ import '../../transactions/models/transaction_model.dart';
 import '../../transactions/providers/transaction_provider.dart';
 import '../../transactions/widgets/add_transaction_modal.dart';
 import '../../transactions/widgets/transaction_card.dart';
+import '../../wishlist/screens/wishlist_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -32,8 +33,18 @@ class DashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SmartBudget', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('SmartBudget',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.stars_rounded),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WishlistScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => context.read<AuthProvider>().logout(),
@@ -46,20 +57,24 @@ class DashboardScreen extends StatelessWidget {
               stream: transactionProvider.getTransactionsStream(user.uid),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const LoadingIndicator(message: 'Memuat data keuangan...');
+                  return const LoadingIndicator(
+                      message: 'Memuat data keuangan...');
                 }
                 if (snapshot.hasError) {
-                  return Center(child: Text('Terjadi kesalahan: ${snapshot.error}'));
+                  return Center(
+                      child: Text('Terjadi kesalahan: ${snapshot.error}'));
                 }
 
                 final transactions = snapshot.data ?? [];
-                
+
                 // Kalkulasi Saldo
                 double totalIncome = 0;
                 double totalExpense = 0;
                 for (var t in transactions) {
-                  if (t.type == TransactionType.income) totalIncome += t.amount;
-                  else totalExpense += t.amount;
+                  if (t.type == TransactionType.income)
+                    totalIncome += t.amount;
+                  else
+                    totalExpense += t.amount;
                 }
                 double balance = totalIncome - totalExpense;
 
@@ -78,38 +93,52 @@ class DashboardScreen extends StatelessWidget {
                           children: [
                             Text(
                               'Total Saldo',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               CurrencyFormatter.convertToIdr(balance),
-                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                             ),
                             const SizedBox(height: 24),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildSummaryItem(context, 'Pemasukan', totalIncome, AppColors.income),
-                                _buildSummaryItem(context, 'Pengeluaran', totalExpense, AppColors.expense),
+                                _buildSummaryItem(context, 'Pemasukan',
+                                    totalIncome, AppColors.income),
+                                _buildSummaryItem(context, 'Pengeluaran',
+                                    totalExpense, AppColors.expense),
                               ],
                             )
                           ],
                         ),
                       ),
                     ),
-                    
+
                     // Judul List
                     const SliverToBoxAdapter(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                         child: Text(
                           'Transaksi Terakhir',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -120,7 +149,8 @@ class DashboardScreen extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.all(32.0),
                           child: Center(
-                            child: Text('Belum ada transaksi. Yuk catat keuanganmu!'),
+                            child: Text(
+                                'Belum ada transaksi. Yuk catat keuanganmu!'),
                           ),
                         ),
                       ),
@@ -134,9 +164,11 @@ class DashboardScreen extends StatelessWidget {
                             transaction: transaction,
                             onDelete: () async {
                               try {
-                                await transactionProvider.deleteTransaction(transaction.id);
+                                await transactionProvider
+                                    .deleteTransaction(transaction.id);
                                 if (!context.mounted) return;
-                                SnackbarUtils.showSuccess(context, 'Transaksi dihapus');
+                                SnackbarUtils.showSuccess(
+                                    context, 'Transaksi dihapus');
                               } catch (e) {
                                 if (!context.mounted) return;
                                 SnackbarUtils.showError(context, e.toString());
@@ -158,11 +190,14 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryItem(BuildContext context, String title, double amount, Color color) {
+  Widget _buildSummaryItem(
+      BuildContext context, String title, double amount, Color color) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+        Text(title,
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer)),
         const SizedBox(height: 4),
         Text(
           CurrencyFormatter.convertToIdr(amount),
