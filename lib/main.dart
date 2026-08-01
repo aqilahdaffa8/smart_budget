@@ -8,6 +8,7 @@ import 'app.dart';
 import 'shared/providers/theme_provider.dart';
 import 'core/utils/date_formatter.dart';
 import 'features/auth/providers/auth_provider.dart';
+import 'features/transactions/providers/transaction_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        // Daftarkan Provider Transaksi di sini
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
       ],
       child: const SmartBudgetApp(),
     ),
