@@ -22,12 +22,18 @@ class WishlistRepository {
   Stream<List<WishlistModel>> getUserWishlistsStream(String userId) {
     return _wishlists
         .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
+        // HAPUS baris orderBy ini:
+        // .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
+      final list = snapshot.docs.map((doc) {
         return WishlistModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
+      
+      // Kita urutkan secara manual di aplikasi: Dari deadline (tenggat waktu) terdekat
+      list.sort((a, b) => a.deadline.compareTo(b.deadline));
+      
+      return list;
     });
   }
 

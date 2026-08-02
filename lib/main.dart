@@ -9,7 +9,7 @@ import 'shared/providers/theme_provider.dart';
 import 'core/utils/date_formatter.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/transactions/providers/transaction_provider.dart';
-import 'features/wishlist/providers/wishlist_provider.dart'; // Import ini
+import 'features/wishlist/providers/wishlist_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

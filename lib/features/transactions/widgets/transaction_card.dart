@@ -17,6 +17,22 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isIncome = transaction.type == TransactionType.income;
+    final bool isSavingsAllocation = transaction.title.startsWith('Nabung:');
+
+    // Menentukan warna dan ikon berdasarkan jenis transaksi
+    Color itemColor;
+    IconData itemIcon;
+    
+    if (isIncome) {
+      itemColor = AppColors.income; // Hijau untuk Pemasukan
+      itemIcon = Icons.arrow_downward;
+    } else if (isSavingsAllocation) {
+      itemColor = Colors.amber.shade700; // Kuning/Amber khusus Alokasi Nabung
+      itemIcon = Icons.track_changes; // <-- Ditukar menggunakan ikon bintang/wishlist
+    } else {
+      itemColor = AppColors.expense; // Merah untuk Pengeluaran biasa
+      itemIcon = Icons.arrow_upward;
+    }
 
     return Dismissible(
       key: Key(transaction.id),
@@ -58,12 +74,10 @@ class TransactionCard extends StatelessWidget {
         ),
         child: ListTile(
           leading: CircleAvatar(
-            backgroundColor: isIncome 
-                ? AppColors.income.withOpacity(0.1) 
-                : AppColors.expense.withOpacity(0.1),
+            backgroundColor: itemColor.withOpacity(0.1),
             child: Icon(
-              isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-              color: isIncome ? AppColors.income : AppColors.expense,
+              itemIcon,
+              color: itemColor,
             ),
           ),
           title: Text(
@@ -78,7 +92,7 @@ class TransactionCard extends StatelessWidget {
             '${isIncome ? '+' : '-'} ${CurrencyFormatter.convertToIdr(transaction.amount)}',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: isIncome ? AppColors.income : AppColors.expense,
+              color: itemColor,
             ),
           ),
         ),
