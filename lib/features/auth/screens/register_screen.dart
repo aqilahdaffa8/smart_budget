@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../core/utils/snackbar_utils.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
+import '../../dashboard/screens/dashboard_screen.dart'; // Tambahkan import ini
 import '../providers/auth_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -34,9 +35,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _emailController.text.trim(),
               _passwordController.text.trim(),
             );
+            
         if (!mounted) return;
-        Navigator.pop(context); // Kembali dari layar register setelah sukses
+        
         SnackbarUtils.showSuccess(context, 'Pendaftaran berhasil!');
+        
+        // PERBAIKAN: Hapus semua halaman dan paksa masuk ke Dashboard
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const DashboardScreen()),
+          (route) => false, 
+        );
       } catch (e) {
         if (!mounted) return;
         SnackbarUtils.showError(context, e.toString());
@@ -50,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Buat Akun Baru'),
+        title: const Text('Buat Akun'),
       ),
       body: SafeArea(
         child: Center(
@@ -61,6 +69,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Icon(
+                    Icons.account_balance_wallet,
+                    size: 80,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Buat akun baru untuk memulai',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 32),
                   CustomTextField(
                     controller: _emailController,
                     label: 'Email',

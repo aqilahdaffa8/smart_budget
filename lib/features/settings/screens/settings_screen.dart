@@ -3,13 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../../../shared/providers/theme_provider.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../auth/screens/login_screen.dart'; // Tambahkan import ini
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Mengambil data user yang sedang login dari Firebase
     final user = FirebaseAuth.instance.currentUser;
     final themeProvider = context.watch<ThemeProvider>();
 
@@ -20,7 +20,6 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          // Bagian Profil
           CircleAvatar(
             radius: 50,
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -41,7 +40,6 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 32),
           const Divider(),
 
-          // Bagian Preferensi
           ListTile(
             leading: const Icon(Icons.dark_mode_outlined),
             title: const Text('Mode Gelap (Dark Mode)'),
@@ -50,14 +48,12 @@ class SettingsScreen extends StatelessWidget {
               value: themeProvider.isDarkMode,
               activeColor: Theme.of(context).colorScheme.primary,
               onChanged: (value) {
-                // Memanggil method toggleTheme dari ThemeProvider (Tahap 1)
                 context.read<ThemeProvider>().toggleTheme(value);
               },
             ),
           ),
           const Divider(),
 
-          // Bagian Informasi
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('Tentang Aplikasi'),
@@ -74,17 +70,21 @@ class SettingsScreen extends StatelessWidget {
           ),
           const Divider(),
 
-          // Bagian Aksi Berbahaya (Logout)
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text(
               'Keluar (Logout)',
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             ),
-            onTap: () {
-              // Tutup layar setting dulu, baru panggil fungsi logout
-              Navigator.pop(context);
-              context.read<AuthProvider>().logout();
+            onTap: () async {
+              // PERBAIKAN: Pindah ke LoginScreen dan hapus Dashboard dari memori
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (route) => false,
+              );
+              
+              // Baru eksekusi penghapusan sesi Firebase
+              await context.read<AuthProvider>().logout();
             },
           ),
         ],
